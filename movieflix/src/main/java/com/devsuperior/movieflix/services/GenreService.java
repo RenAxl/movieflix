@@ -53,6 +53,10 @@ public class GenreService {
 			entity = repository.save(entity);
 			return new GenreDTO(entity, entity.getMovies());
 	}
+	
+	public void delete(Long id) {
+			repository.deleteById(id);
+	}
 
 	private void copyDtoToEntity(GenreDTO dto, Genre entity) {
 		entity.setName(dto.getName());
