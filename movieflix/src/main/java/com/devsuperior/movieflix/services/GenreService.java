@@ -45,6 +45,14 @@ public class GenreService {
 		entity = repository.save(entity);
 		return new GenreDTO(entity, entity.getMovies());
 	}
+	
+	@Transactional
+	public GenreDTO update(Long id, GenreDTO dto) {
+			Genre entity = repository.getOne(id);
+			copyDtoToEntity(dto, entity);
+			entity = repository.save(entity);
+			return new GenreDTO(entity, entity.getMovies());
+	}
 
 	private void copyDtoToEntity(GenreDTO dto, Genre entity) {
 		entity.setName(dto.getName());
@@ -56,5 +64,4 @@ public class GenreService {
 			entity.getMovies().add(movie);
 		}
 	}
-
 }
