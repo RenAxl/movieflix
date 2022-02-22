@@ -1,5 +1,7 @@
 package com.devsuperior.movieflix.services;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +25,11 @@ public class GenreService {
 		return page.map(x -> new GenreDTO(x, x.getMovies()));
 	}
 	
-	
+	@Transactional(readOnly = true)
+	public GenreDTO findById(Long id) {
+		Optional<Genre> obj = repository.findById(id);
+		Genre entity = obj.get();
+		return new GenreDTO(entity, entity.getMovies());
+	}
 
 }
