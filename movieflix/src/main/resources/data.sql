@@ -13,12 +13,12 @@ INSERT INTO tb_movie (title, sub_Title, year, img_Url, synopsis, genre_id) VALUE
 INSERT INTO tb_movie (title, sub_Title, year, img_Url, synopsis, genre_id) VALUES ('Liga da justiça', 'Liga', 2017, 'https://upload.wikimedia.org/wikipedia/pt/thumb/6/60/Liga_da_Justi%C3%A7a_%28Poster%29.jpg/250px-Liga_da_Justi%C3%A7a_%28Poster%29.jpg', 'Os maiores herois da DC se unem contra o vião lobo da estepe', 6);
 
 
-INSERT INTO tb_review (text) VALUES ('Nice');
-INSERT INTO tb_review (text) VALUES ('Fair');
-INSERT INTO tb_review (text) VALUES ('Nice');
-INSERT INTO tb_review (text) VALUES ('Fair');
-INSERT INTO tb_review (text) VALUES ('Nice');
-INSERT INTO tb_review (text) VALUES ('Fair');
+INSERT INTO tb_review (text, movie_id) VALUES ('Nice', 1);
+INSERT INTO tb_review (text, movie_id) VALUES ('Fair', 2);
+INSERT INTO tb_review (text, movie_id) VALUES ('Nice', 3);
+INSERT INTO tb_review (text, movie_id) VALUES ('Fair', 4);
+INSERT INTO tb_review (text, movie_id) VALUES ('Nice', 5);
+INSERT INTO tb_review (text, movie_id) VALUES ('Fair', 6);
 
 INSERT INTO tb_user (name, email, password) VALUES ('Bob Brown', 'bob@gmail.com', '$2a$10$eACCYoNOHEqXve8aIWT8Nu3PkMXWBaOxJ9aORUYzfMQCbVBIhZ8tG');
 INSERT INTO tb_user (name, email, password) VALUES ('Ana Brown', 'ana@gmail.com', '$2a$10$eACCYoNOHEqXve8aIWT8Nu3PkMXWBaOxJ9aORUYzfMQCbVBIhZ8tG');

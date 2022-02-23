@@ -30,7 +30,7 @@ public class GenreDTO implements Serializable {
 	
 	public GenreDTO(Genre entity, Set<Movie> movies) {
 		this(entity);
-		movies.forEach(movie -> this.movies.add(new MovieDTO(movie)));
+		movies.forEach(movie -> this.movies.add(new MovieDTO(movie, movie.getReviews())));
 	}
 
 	public Long getId() {
@@ -52,12 +52,4 @@ public class GenreDTO implements Serializable {
 	public List<MovieDTO> getMovies() {
 		return movies;
 	}
-
-	public void setMovies(List<MovieDTO> movies) {
-		this.movies = movies;
-	}
-	
-	
-	
-
 }
