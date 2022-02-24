@@ -1,5 +1,7 @@
 package com.devsuperior.movieflix.services;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,5 +23,12 @@ public class MovieService {
 		Page<Movie> page = repository.findAll(pageRequest);
 
 		return page.map(x -> new MovieDTO(x, x.getReviews()));
+	}
+	
+	@Transactional(readOnly = true)
+	public MovieDTO findById(Long id) {
+		Optional<Movie> obj = repository.findById(id);
+		Movie entity = obj.get();
+		return new MovieDTO(entity, entity.getReviews());
 	}
 }
