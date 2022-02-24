@@ -26,18 +26,19 @@ public class Movie implements Serializable {
 	private String subTitle;
 	private Integer year;
 	
+	@Column(columnDefinition = "TEXT")
+	private String imgUrl;
+	
+	@Column(columnDefinition = "TEXT")
+	private String synopsis;
+	
+	
 	@ManyToOne
 	@JoinColumn(name = "genre_id")
 	private Genre genre;
 	
 	@OneToMany(mappedBy = "movie")
 	private Set<Review> reviews = new HashSet<>();
-	
-	@Column(columnDefinition = "TEXT")
-	private String imgUrl;
-	
-	@Column(columnDefinition = "TEXT")
-	private String synopsis;
 	
 	public Movie (){
 	}
