@@ -20,24 +20,24 @@ public class MovieService {
 
 	@Autowired
 	private MovieRepository repository;
-	
+
 	@Autowired
 	private ReviewRepository reviewRepository;
-	
+
 	@Transactional(readOnly = true)
 	public Page<MovieDTO> findAllPaged(PageRequest pageRequest) {
 		Page<Movie> page = repository.findAll(pageRequest);
 
 		return page.map(x -> new MovieDTO(x, x.getReviews()));
 	}
-	
+
 	@Transactional(readOnly = true)
 	public MovieDTO findById(Long id) {
 		Optional<Movie> obj = repository.findById(id);
 		Movie entity = obj.get();
 		return new MovieDTO(entity, entity.getReviews());
 	}
-	
+
 	@Transactional
 	public MovieDTO insert(MovieDTO dto) {
 		Movie entity = new Movie();
@@ -45,15 +45,19 @@ public class MovieService {
 		entity = repository.save(entity);
 		return new MovieDTO(entity, entity.getReviews());
 	}
-	
+
 	@Transactional
 	public MovieDTO update(Long id, MovieDTO dto) {
-			Movie entity = repository.getOne(id);
-			copyDtoToEntityUpdate(dto, entity);
-			entity = repository.save(entity);
-			return new MovieDTO(entity, entity.getReviews());
+		Movie entity = repository.getOne(id);
+		copyDtoToEntityUpdate(dto, entity);
+		entity = repository.save(entity);
+		return new MovieDTO(entity, entity.getReviews());
 	}
-	
+
+	public void delete(Long id) {
+		repository.deleteById(id);
+	}
+
 	private void copyDtoToEntityInsert(MovieDTO dto, Movie entity) {
 		entity.setTitle(dto.getTitle());
 		entity.setSubTitle(dto.getSubTitle());
@@ -70,7 +74,7 @@ public class MovieService {
 			entity.getReviews().add(review);
 		}
 	}
-	
+
 	private void copyDtoToEntityUpdate(MovieDTO dto, Movie entity) {
 		entity.setTitle(dto.getTitle());
 		entity.setSubTitle(dto.getSubTitle());
@@ -86,6 +90,5 @@ public class MovieService {
 			entity.getReviews().add(review);
 		}
 	}
-	
-	
+
 }
