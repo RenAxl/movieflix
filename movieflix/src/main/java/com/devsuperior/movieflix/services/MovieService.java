@@ -41,12 +41,20 @@ public class MovieService {
 	@Transactional
 	public MovieDTO insert(MovieDTO dto) {
 		Movie entity = new Movie();
-		copyDtoToEntity(dto, entity);
+		copyDtoToEntityInsert(dto, entity);
 		entity = repository.save(entity);
 		return new MovieDTO(entity, entity.getReviews());
 	}
 	
-	private void copyDtoToEntity(MovieDTO dto, Movie entity) {
+	@Transactional
+	public MovieDTO update(Long id, MovieDTO dto) {
+			Movie entity = repository.getOne(id);
+			copyDtoToEntityUpdate(dto, entity);
+			entity = repository.save(entity);
+			return new MovieDTO(entity, entity.getReviews());
+	}
+	
+	private void copyDtoToEntityInsert(MovieDTO dto, Movie entity) {
 		entity.setTitle(dto.getTitle());
 		entity.setSubTitle(dto.getSubTitle());
 		entity.setYear(dto.getYear());
@@ -55,12 +63,29 @@ public class MovieService {
 
 		entity.getReviews().clear();
 
-		for (ReviewDTO movDto : dto.getReviews()) {
-			Review review = reviewRepository.getOne(movDto.getId());
+		for (ReviewDTO revDto : dto.getReviews()) {
+			Review review = new Review();
+			review.setText(reviewRepository.getOne(revDto.getId()).getText());
+			review.setMovie(entity);
 			entity.getReviews().add(review);
 		}
 	}
 	
+	private void copyDtoToEntityUpdate(MovieDTO dto, Movie entity) {
+		entity.setTitle(dto.getTitle());
+		entity.setSubTitle(dto.getSubTitle());
+		entity.setYear(dto.getYear());
+		entity.setImgUrl(dto.getImgUrl());
+		entity.setSynopsis(dto.getSynopsis());
+
+		entity.getReviews().clear();
+
+		for (ReviewDTO revDto : dto.getReviews()) {
+			Review review = reviewRepository.getOne(revDto.getId());
+			review.setMovie(entity);
+			entity.getReviews().add(review);
+		}
+	}
 	
 	
 }
