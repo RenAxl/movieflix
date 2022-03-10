@@ -31,4 +31,12 @@ public class ReviewService {
 		Review entity = obj.get();
 		return new ReviewDTO(entity);
 	}
+	
+	@Transactional
+	public ReviewDTO insert(ReviewDTO dto) {
+		Review entity = new Review();
+		entity.setText(dto.getText());
+		entity = repository.save(entity);
+		return new ReviewDTO(entity);
+	}
 }
