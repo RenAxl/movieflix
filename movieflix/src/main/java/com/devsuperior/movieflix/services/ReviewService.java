@@ -47,4 +47,8 @@ public class ReviewService {
 			entity = repository.save(entity);
 			return new ReviewDTO(entity);
 	}
+	
+	public void delete(Long id) {
+		repository.deleteById(id);
+	}
 }
