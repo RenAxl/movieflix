@@ -39,4 +39,12 @@ public class ReviewService {
 		entity = repository.save(entity);
 		return new ReviewDTO(entity);
 	}
+	
+	@Transactional
+	public ReviewDTO update(Long id, ReviewDTO dto) {
+			Review entity = repository.getOne(id);
+			entity.setText(dto.getText());
+			entity = repository.save(entity);
+			return new ReviewDTO(entity);
+	}
 }
