@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,7 +23,7 @@ public class Genre implements Serializable {
 	private Long id;
 	private String name;
 	
-	@OneToMany(mappedBy = "genre")
+	@OneToMany(mappedBy = "genre", cascade=CascadeType.PERSIST, fetch = FetchType.EAGER)
 	private Set<Movie> movies = new HashSet<>();
 	
 	public Genre (){		

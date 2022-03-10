@@ -41,7 +41,7 @@ public class GenreService {
 	@Transactional
 	public GenreDTO insert(GenreDTO dto) {
 		Genre entity = new Genre();
-		copyDtoToEntity(dto, entity);
+		copyDtoToEntityInsert(dto, entity);
 		entity = repository.save(entity);
 		return new GenreDTO(entity, entity.getMovies());
 	}
@@ -49,7 +49,7 @@ public class GenreService {
 	@Transactional
 	public GenreDTO update(Long id, GenreDTO dto) {
 			Genre entity = repository.getOne(id);
-			copyDtoToEntity(dto, entity);
+			copyDtoToEntityUpdate(dto, entity);
 			entity = repository.save(entity);
 			return new GenreDTO(entity, entity.getMovies());
 	}
@@ -58,13 +58,35 @@ public class GenreService {
 			repository.deleteById(id);
 	}
 
-	private void copyDtoToEntity(GenreDTO dto, Genre entity) {
+	private void copyDtoToEntityInsert(GenreDTO dto, Genre entity) {
+		entity.setName(dto.getName());
+
+		entity.getMovies().clear();
+
+		for (MovieDTO movDto : dto.getMovies()) {
+			Movie movie = new Movie();
+			movie.setTitle(movieRepository.getOne(movDto.getId()).getTitle());
+			movie.setSubTitle(movieRepository.getOne(movDto.getId()).getSubTitle());
+			movie.setYear(movieRepository.getOne(movDto.getId()).getYear());
+			movie.setImgUrl(movieRepository.getOne(movDto.getId()).getImgUrl());
+			movie.setSynopsis(movieRepository.getOne(movDto.getId()).getSynopsis());
+			
+			movie.setGenre(entity);
+			
+			entity.getMovies().add(movie);
+		}
+	}
+	
+	private void copyDtoToEntityUpdate(GenreDTO dto, Genre entity) {
 		entity.setName(dto.getName());
 
 		entity.getMovies().clear();
 
 		for (MovieDTO movDto : dto.getMovies()) {
 			Movie movie = movieRepository.getOne(movDto.getId());
+			
+			movie.setGenre(entity);
+			
 			entity.getMovies().add(movie);
 		}
 	}
