@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -31,7 +32,7 @@ public class User implements Serializable {
 	private String email;
 	private String password;
 	
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "user", cascade=CascadeType.PERSIST, fetch = FetchType.EAGER)
 	private Set<Review> reviews = new HashSet<>();
 	
 	@ManyToMany(fetch = FetchType.EAGER) 

@@ -12,14 +12,6 @@ INSERT INTO tb_movie (title, sub_Title, year, img_Url, synopsis, genre_id) VALUE
 INSERT INTO tb_movie (title, sub_Title, year, img_Url, synopsis, genre_id) VALUES ('Dragon ball super: Broly', 'Dragon', 2018, 'https://upload.wikimedia.org/wikipedia/pt/thumb/a/a1/Doragon_b%C3%B4ru_ch%C3%B4_Buror%C3%AE.jpg/243px-Doragon_b%C3%B4ru_ch%C3%B4_Buror%C3%AE.jpg', 'Broly é introduzido oficialmente em Dragon Ball', 5);
 INSERT INTO tb_movie (title, sub_Title, year, img_Url, synopsis, genre_id) VALUES ('Liga da justiça', 'Liga', 2017, 'https://upload.wikimedia.org/wikipedia/pt/thumb/6/60/Liga_da_Justi%C3%A7a_%28Poster%29.jpg/250px-Liga_da_Justi%C3%A7a_%28Poster%29.jpg', 'Os maiores herois da DC se unem contra o vião lobo da estepe', 6);
 
-
-INSERT INTO tb_review (text, movie_id) VALUES ('Nice', 1);
-INSERT INTO tb_review (text, movie_id) VALUES ('Fair', 2);
-INSERT INTO tb_review (text, movie_id) VALUES ('Nice', 3);
-INSERT INTO tb_review (text, movie_id) VALUES ('Fair', 4);
-INSERT INTO tb_review (text, movie_id) VALUES ('Nice', 5);
-INSERT INTO tb_review (text, movie_id) VALUES ('Fair', 6);
-
 INSERT INTO tb_user (name, email, password) VALUES ('Bob Brown', 'bob@gmail.com', '$2a$10$eACCYoNOHEqXve8aIWT8Nu3PkMXWBaOxJ9aORUYzfMQCbVBIhZ8tG');
 INSERT INTO tb_user (name, email, password) VALUES ('Ana Brown', 'ana@gmail.com', '$2a$10$eACCYoNOHEqXve8aIWT8Nu3PkMXWBaOxJ9aORUYzfMQCbVBIhZ8tG');
 
@@ -29,4 +21,11 @@ INSERT INTO tb_role (authority) VALUES ('ROLE_MEMBER');
 
 INSERT INTO tb_user_role (user_id, role_id) VALUES (1, 1);
 INSERT INTO tb_user_role (user_id, role_id) VALUES (2, 2);
+
+INSERT INTO tb_review (text, movie_id, user_id) VALUES ('Nice', 1, 2);
+INSERT INTO tb_review (text, movie_id, user_id) VALUES ('Fair', 2, 1);
+INSERT INTO tb_review (text, movie_id, user_id) VALUES ('Nice', 3, 1);
+INSERT INTO tb_review (text, movie_id, user_id) VALUES ('Fair', 4, 2);
+INSERT INTO tb_review (text, movie_id, user_id) VALUES ('Nice', 5, 1);
+INSERT INTO tb_review (text, movie_id, user_id) VALUES ('Fair', 6, 2);
 
