@@ -23,26 +23,26 @@ public class UserService {
 
 	@Autowired
 	private UserRepository repository;
-	
+
 	@Autowired
 	private RoleRepository roleRepository;
-	
+
 	@Autowired
 	private ReviewRepository reviewRepository;
-	
+
 	@Transactional(readOnly = true)
-	public Page<UserDTO> findAllPaged(PageRequest pageRequest){
+	public Page<UserDTO> findAllPaged(PageRequest pageRequest) {
 		Page<User> list = repository.findAll(pageRequest);
 		return list.map(x -> new UserDTO(x));
 	}
-	
+
 	@Transactional(readOnly = true)
 	public UserDTO findById(Long id) {
 		Optional<User> obj = repository.findById(id);
 		User entity = obj.get();
 		return new UserDTO(entity);
 	}
-	
+
 	@Transactional
 	public UserDTO insert(UserDTO dto) {
 		User entity = new User();
@@ -50,21 +50,21 @@ public class UserService {
 		entity = repository.save(entity);
 		return new UserDTO(entity);
 	}
-	
-	private void copyDtoToEntityInsert(UserDTO dto, User entity){
-		
-		entity.setName(dto.getName());;
+
+	private void copyDtoToEntityInsert(UserDTO dto, User entity) {
+
+		entity.setName(dto.getName());
+		;
 		entity.setEmail(dto.getEmail());
 		entity.setPassword(dto.getPassword());
-		
-		
+
 		entity.getRoles().clear();
-		
-		for(RoleDTO roleDto : dto.getRoles()) {
+
+		for (RoleDTO roleDto : dto.getRoles()) {
 			Role role = roleRepository.getOne(roleDto.getId());
 			entity.getRoles().add(role);
 		}
-		
+
 		for (ReviewDTO revDto : dto.getReviews()) {
 			Review review = new Review();
 			review.setText(reviewRepository.getOne(revDto.getId()).getText());
@@ -72,29 +72,32 @@ public class UserService {
 			entity.getReviews().add(review);
 		}
 	}
-	
+
 	@Transactional
 	public UserDTO update(Long id, UserDTO dto) {
-			User entity = repository.getOne(id);
-			copyDtoToEntityUpdate(dto, entity);
-			entity = repository.save(entity);
-			return new UserDTO(entity);
+		User entity = repository.getOne(id);
+		copyDtoToEntityUpdate(dto, entity);
+		entity = repository.save(entity);
+		return new UserDTO(entity);
 	}
-	
-	private void copyDtoToEntityUpdate(UserDTO dto, User entity){
-		
-		entity.setName(dto.getName());;
+
+	public void delete(Long id) {
+		repository.deleteById(id);
+	}
+
+	private void copyDtoToEntityUpdate(UserDTO dto, User entity) {
+
+		entity.setName(dto.getName());
 		entity.setEmail(dto.getEmail());
 		entity.setPassword(dto.getPassword());
-		
-		
+
 		entity.getRoles().clear();
-		
-		for(RoleDTO roleDto : dto.getRoles()) {
+
+		for (RoleDTO roleDto : dto.getRoles()) {
 			Role role = roleRepository.getOne(roleDto.getId());
 			entity.getRoles().add(role);
 		}
-		
+
 		for (ReviewDTO revDto : dto.getReviews()) {
 			Review review = reviewRepository.getOne(revDto.getId());
 			review.setUser(entity);
