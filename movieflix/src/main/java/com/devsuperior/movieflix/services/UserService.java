@@ -1,5 +1,7 @@
 package com.devsuperior.movieflix.services;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,5 +22,12 @@ public class UserService {
 	public Page<UserDTO> findAllPaged(PageRequest pageRequest){
 		Page<User> list = repository.findAll(pageRequest);
 		return list.map(x -> new UserDTO(x));
+	}
+	
+	@Transactional(readOnly = true)
+	public UserDTO findById(Long id) {
+		Optional<User> obj = repository.findById(id);
+		User entity = obj.get();
+		return new UserDTO(entity);
 	}
 }
