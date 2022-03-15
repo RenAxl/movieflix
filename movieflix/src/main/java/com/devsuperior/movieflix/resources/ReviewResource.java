@@ -2,6 +2,8 @@ package com.devsuperior.movieflix.resources;
 
 import java.net.URI;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -50,7 +52,7 @@ public class ReviewResource {
 	}
 	
 	@PostMapping
-	public ResponseEntity<ReviewDTO> insert(@RequestBody ReviewDTO dto){
+	public ResponseEntity<ReviewDTO> insert(@Valid @RequestBody ReviewDTO dto){
 		dto = service.insert(dto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(dto.getId()).toUri();
@@ -58,7 +60,7 @@ public class ReviewResource {
 	}
 	
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<ReviewDTO> update(@PathVariable Long id, @RequestBody ReviewDTO dto){
+	public ResponseEntity<ReviewDTO> update(@PathVariable Long id, @Valid @RequestBody ReviewDTO dto){
 		dto = service.update(id, dto);
 		return ResponseEntity.ok().body(dto);
 	}

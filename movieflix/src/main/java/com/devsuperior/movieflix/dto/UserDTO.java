@@ -6,14 +6,23 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+
 import com.devsuperior.movieflix.entities.User;
 
 public class UserDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private Long id;
+	
+	@NotBlank(message = "Campo obrigatório")
 	private String name;
+	
+	@Email(message = "favor entrar com um email válido")
 	private String email;
+	
+	@NotBlank(message = "Campo obrigatório")
 	private String password;
 	
 	private Set<RoleDTO> roles = new HashSet<>();

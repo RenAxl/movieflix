@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import com.devsuperior.movieflix.entities.Movie;
 import com.devsuperior.movieflix.entities.Review;
 
@@ -12,12 +16,25 @@ public class MovieDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
+
+	@Size(min = 5, max = 60, message = "O Titulo deve ter entre 5 a 60 caracteres")
+	@NotBlank(message = "Campo requerido")
 	private String title;
-	private String subTitle;
-	private Integer year;
-	private String imgUrl;
-	private String synopsis;
 	
+	@Size(min = 5, max = 60, message ="A legenda deve ter entre 5 a 60 caracteres")
+	@NotBlank(message = "Campo requerido")
+	private String subTitle;
+	
+	@NotNull
+	private Integer year;
+	
+	@NotBlank(message = "Campo requerido")
+	private String imgUrl;
+	
+	@Size(min = 5, max = 60, message = "A sinopse deve ter entre 5 a 60 caracteres")
+	@NotBlank(message = "Campo requerido")
+	private String synopsis;
+
 	private List<ReviewDTO> reviews = new ArrayList<>();
 
 	public MovieDTO() {
@@ -39,7 +56,7 @@ public class MovieDTO implements Serializable {
 		this.year = entity.getYear();
 		this.imgUrl = entity.getImgUrl();
 		this.synopsis = entity.getSynopsis();
-		
+
 	}
 
 	public MovieDTO(Movie entity, Set<Review> reviews) {
@@ -78,7 +95,7 @@ public class MovieDTO implements Serializable {
 	public void setYear(Integer year) {
 		this.year = year;
 	}
-	
+
 	public String getImgUrl() {
 		return imgUrl;
 	}
@@ -98,6 +115,5 @@ public class MovieDTO implements Serializable {
 	public List<ReviewDTO> getReviews() {
 		return reviews;
 	}
-	
-	
+
 }
