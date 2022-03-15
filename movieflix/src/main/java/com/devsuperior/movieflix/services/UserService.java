@@ -72,4 +72,33 @@ public class UserService {
 			entity.getReviews().add(review);
 		}
 	}
+	
+	@Transactional
+	public UserDTO update(Long id, UserDTO dto) {
+			User entity = repository.getOne(id);
+			copyDtoToEntityUpdate(dto, entity);
+			entity = repository.save(entity);
+			return new UserDTO(entity);
+	}
+	
+	private void copyDtoToEntityUpdate(UserDTO dto, User entity){
+		
+		entity.setName(dto.getName());;
+		entity.setEmail(dto.getEmail());
+		entity.setPassword(dto.getPassword());
+		
+		
+		entity.getRoles().clear();
+		
+		for(RoleDTO roleDto : dto.getRoles()) {
+			Role role = roleRepository.getOne(roleDto.getId());
+			entity.getRoles().add(role);
+		}
+		
+		for (ReviewDTO revDto : dto.getReviews()) {
+			Review review = reviewRepository.getOne(revDto.getId());
+			review.setUser(entity);
+			entity.getReviews().add(review);
+		}
+	}
 }
