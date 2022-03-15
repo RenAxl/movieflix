@@ -2,7 +2,11 @@ package com.devsuperior.movieflix.services;
 
 import java.util.Optional;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -17,6 +21,8 @@ import com.devsuperior.movieflix.entities.User;
 import com.devsuperior.movieflix.repositories.ReviewRepository;
 import com.devsuperior.movieflix.repositories.RoleRepository;
 import com.devsuperior.movieflix.repositories.UserRepository;
+import com.devsuperior.movieflix.services.exceptions.DatabaseException;
+import com.devsuperior.movieflix.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class UserService {
@@ -39,7 +45,7 @@ public class UserService {
 	@Transactional(readOnly = true)
 	public UserDTO findById(Long id) {
 		Optional<User> obj = repository.findById(id);
-		User entity = obj.get();
+		User entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
 		return new UserDTO(entity);
 	}
 
@@ -49,6 +55,28 @@ public class UserService {
 		copyDtoToEntityInsert(dto, entity);
 		entity = repository.save(entity);
 		return new UserDTO(entity);
+	}
+
+	@Transactional
+	public UserDTO update(Long id, UserDTO dto) {
+		try {
+			User entity = repository.getOne(id);
+			copyDtoToEntityUpdate(dto, entity);
+			entity = repository.save(entity);
+			return new UserDTO(entity);
+		} catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException("Id not found " + id);
+		}
+	}
+
+	public void delete(Long id) {
+		try {
+			repository.deleteById(id);
+		} catch (EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundException("Id not found " + id);
+		} catch (DataIntegrityViolationException e) {
+			throw new DatabaseException("Integrity violation");
+		}
 	}
 
 	private void copyDtoToEntityInsert(UserDTO dto, User entity) {
@@ -71,18 +99,6 @@ public class UserService {
 			review.setUser(entity);
 			entity.getReviews().add(review);
 		}
-	}
-
-	@Transactional
-	public UserDTO update(Long id, UserDTO dto) {
-		User entity = repository.getOne(id);
-		copyDtoToEntityUpdate(dto, entity);
-		entity = repository.save(entity);
-		return new UserDTO(entity);
-	}
-
-	public void delete(Long id) {
-		repository.deleteById(id);
 	}
 
 	private void copyDtoToEntityUpdate(UserDTO dto, User entity) {

@@ -2,7 +2,11 @@ package com.devsuperior.movieflix.services;
 
 import java.util.Optional;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -14,6 +18,8 @@ import com.devsuperior.movieflix.entities.Movie;
 import com.devsuperior.movieflix.entities.Review;
 import com.devsuperior.movieflix.repositories.MovieRepository;
 import com.devsuperior.movieflix.repositories.ReviewRepository;
+import com.devsuperior.movieflix.services.exceptions.DatabaseException;
+import com.devsuperior.movieflix.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class MovieService {
@@ -34,7 +40,7 @@ public class MovieService {
 	@Transactional(readOnly = true)
 	public MovieDTO findById(Long id) {
 		Optional<Movie> obj = repository.findById(id);
-		Movie entity = obj.get();
+		Movie entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
 		return new MovieDTO(entity, entity.getReviews());
 	}
 
@@ -48,14 +54,25 @@ public class MovieService {
 
 	@Transactional
 	public MovieDTO update(Long id, MovieDTO dto) {
-		Movie entity = repository.getOne(id);
-		copyDtoToEntityUpdate(dto, entity);
-		entity = repository.save(entity);
-		return new MovieDTO(entity, entity.getReviews());
+		try {
+			Movie entity = repository.getOne(id);
+			copyDtoToEntityUpdate(dto, entity);
+			entity = repository.save(entity);
+			return new MovieDTO(entity, entity.getReviews());
+		} catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException("Id not found " + id);
+		}
+
 	}
 
 	public void delete(Long id) {
-		repository.deleteById(id);
+		try {
+			repository.deleteById(id);
+		} catch (EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundException("Id not found " + id);
+		} catch (DataIntegrityViolationException e) {
+			throw new DatabaseException("Integrity violation");
+		}
 	}
 
 	private void copyDtoToEntityInsert(MovieDTO dto, Movie entity) {
