@@ -1,7 +1,5 @@
 package com.devsuperior.movieflix.services;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
@@ -33,7 +31,7 @@ public class MovieService {
 
 	@Autowired
 	private ReviewRepository reviewRepository;
-	
+
 	@Autowired
 	private GenreRepository genreRepository;
 
@@ -41,10 +39,7 @@ public class MovieService {
 	public Page<MovieDTO> findAllPaged(Long genreId, String title, PageRequest pageRequest) {
 		Genre genre = (genreId == 0L) ? null : genreRepository.getOne(genreId);
 		Page<Movie> page = repository.find(genre, title, pageRequest);
-<<<<<<< HEAD
 		repository.findMoviesWithGenre(page.getContent());
-=======
->>>>>>> de8748169e41cbb3e55e2e21f15a6786524ced1a
 		return page.map(x -> new MovieDTO(x, x.getReviews()));
 	}
 
