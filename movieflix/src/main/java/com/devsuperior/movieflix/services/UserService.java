@@ -47,6 +47,9 @@ public class UserService implements UserDetailsService {
 	private ReviewRepository reviewRepository;
 	
 	@Autowired
+	private AuthService authService;
+	
+	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 
 	@Transactional(readOnly = true)
@@ -146,5 +149,10 @@ public class UserService implements UserDetailsService {
 		
 		logger.info("User found: " + username);
 		return user;
+	}
+	
+	public UserDTO autenticatedUser() {
+		User user = authService.authenticated();
+		return new UserDTO(user);
 	}
 }

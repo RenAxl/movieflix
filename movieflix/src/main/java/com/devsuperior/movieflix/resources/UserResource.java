@@ -73,6 +73,10 @@ public class UserResource {
 		return ResponseEntity.noContent().build();
 	}
 	
-	
+	@GetMapping("/profile")
+	public ResponseEntity<UserDTO> getProfile() {
+		UserDTO dto = service.autenticatedUser();
+		return ResponseEntity.ok().body(dto);
+	}
 	
 }
