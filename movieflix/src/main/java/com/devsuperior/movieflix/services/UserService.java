@@ -9,6 +9,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +38,9 @@ public class UserService {
 
 	@Autowired
 	private ReviewRepository reviewRepository;
+	
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
 
 	@Transactional(readOnly = true)
 	public Page<UserDTO> findAllPaged(PageRequest pageRequest) {
@@ -56,7 +60,7 @@ public class UserService {
 		User entity = new User();
 		copyDtoToEntityInsert(dto, entity);
 		entity = repository.save(entity);
-		entity.setPassword(dto.getPassword());
+		entity.setPassword(passwordEncoder.encode(dto.getPassword()));
 		return new UserDTO(entity);
 	}
 
@@ -66,6 +70,7 @@ public class UserService {
 			User entity = repository.getOne(id);
 			copyDtoToEntityUpdate(dto, entity);
 			entity = repository.save(entity);
+			entity.setPassword(passwordEncoder.encode(dto.getPassword()));
 			return new UserDTO(entity);
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException("Id not found " + id);
