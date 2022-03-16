@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.devsuperior.movieflix.dto.ReviewDTO;
 import com.devsuperior.movieflix.dto.RoleDTO;
 import com.devsuperior.movieflix.dto.UserDTO;
+import com.devsuperior.movieflix.dto.UserInsertDTO;
+import com.devsuperior.movieflix.dto.UserUpdateDTO;
 import com.devsuperior.movieflix.entities.Review;
 import com.devsuperior.movieflix.entities.Role;
 import com.devsuperior.movieflix.entities.User;
@@ -50,15 +52,16 @@ public class UserService {
 	}
 
 	@Transactional
-	public UserDTO insert(UserDTO dto) {
+	public UserDTO insert(UserInsertDTO dto) {
 		User entity = new User();
 		copyDtoToEntityInsert(dto, entity);
 		entity = repository.save(entity);
+		entity.setPassword(dto.getPassword());
 		return new UserDTO(entity);
 	}
 
 	@Transactional
-	public UserDTO update(Long id, UserDTO dto) {
+	public UserDTO update(Long id, UserUpdateDTO dto) {
 		try {
 			User entity = repository.getOne(id);
 			copyDtoToEntityUpdate(dto, entity);
@@ -82,9 +85,8 @@ public class UserService {
 	private void copyDtoToEntityInsert(UserDTO dto, User entity) {
 
 		entity.setName(dto.getName());
-		;
 		entity.setEmail(dto.getEmail());
-		entity.setPassword(dto.getPassword());
+
 
 		entity.getRoles().clear();
 
@@ -105,7 +107,6 @@ public class UserService {
 
 		entity.setName(dto.getName());
 		entity.setEmail(dto.getEmail());
-		entity.setPassword(dto.getPassword());
 
 		entity.getRoles().clear();
 
