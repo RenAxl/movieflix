@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.devsuperior.movieflix.dto.ReviewDTO;
 import com.devsuperior.movieflix.entities.Review;
+import com.devsuperior.movieflix.repositories.MovieRepository;
 import com.devsuperior.movieflix.repositories.ReviewRepository;
 import com.devsuperior.movieflix.services.exceptions.DatabaseException;
 import com.devsuperior.movieflix.services.exceptions.ResourceNotFoundException;
@@ -23,7 +24,13 @@ public class ReviewService {
 
 	@Autowired
 	private ReviewRepository repository;
-
+	
+	@Autowired
+	private MovieRepository movieRepository;
+	
+	@Autowired
+	private AuthService authService;
+		
 	@Transactional(readOnly = true)
 	public Page<ReviewDTO> findAllPaged(PageRequest pageRequest) {
 		Page<Review> list = repository.findAll(pageRequest);
@@ -41,7 +48,8 @@ public class ReviewService {
 	@Transactional
 	public ReviewDTO insert(ReviewDTO dto) {
 		Review entity = new Review();
-		entity.setText(dto.getText());
+		copyDtoToEntityInsert(dto, entity);
+		authService.validateVisitorOrMember(entity.getUser().getId());
 		entity = repository.save(entity);
 		return new ReviewDTO(entity);
 	}
@@ -67,5 +75,11 @@ public class ReviewService {
 		} catch (DataIntegrityViolationException e) {
 			throw new DatabaseException("Integrity violation");
 		}
+	}
+	
+	private void copyDtoToEntityInsert(ReviewDTO dto, Review entity) {
+		entity.setText(dto.getText());
+		entity.setMovie(movieRepository.getOne(dto.getMovieId()));
+		entity.setUser(authService.authenticated());
 	}
 }

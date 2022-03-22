@@ -20,33 +20,37 @@ public class MovieDTO implements Serializable {
 	@Size(min = 5, max = 60, message = "O Titulo deve ter entre 5 a 60 caracteres")
 	@NotBlank(message = "Campo requerido")
 	private String title;
-	
-	@Size(min = 5, max = 60, message ="A legenda deve ter entre 5 a 60 caracteres")
+
+	@Size(min = 5, max = 60, message = "A legenda deve ter entre 5 a 60 caracteres")
 	@NotBlank(message = "Campo requerido")
 	private String subTitle;
-	
+
 	@NotNull
 	private Integer year;
-	
+
 	@NotBlank(message = "Campo requerido")
 	private String imgUrl;
-	
+
 	@Size(min = 5, max = 60, message = "A sinopse deve ter entre 5 a 60 caracteres")
 	@NotBlank(message = "Campo requerido")
 	private String synopsis;
+
+	private GenreDTO genre;
 
 	private List<ReviewDTO> reviews = new ArrayList<>();
 
 	public MovieDTO() {
 	}
 
-	public MovieDTO(Long id, String title, String subTitle, Integer year, String imgUrl, String synopsis) {
+	public MovieDTO(Long id, String title, String subTitle, Integer year, String imgUrl, String synopsis,
+			GenreDTO genre) {
 		this.id = id;
 		this.title = title;
 		this.subTitle = subTitle;
 		this.year = year;
 		this.imgUrl = imgUrl;
 		this.synopsis = synopsis;
+		this.genre = genre;
 	}
 
 	public MovieDTO(Movie entity) {
@@ -56,6 +60,7 @@ public class MovieDTO implements Serializable {
 		this.year = entity.getYear();
 		this.imgUrl = entity.getImgUrl();
 		this.synopsis = entity.getSynopsis();
+		this.genre = new GenreDTO(entity.getGenre());
 
 	}
 
@@ -110,6 +115,14 @@ public class MovieDTO implements Serializable {
 
 	public void setSynopsis(String synopsis) {
 		this.synopsis = synopsis;
+	}
+
+	public GenreDTO getGenre() {
+		return genre;
+	}
+
+	public void setGenre(GenreDTO genre) {
+		this.genre = genre;
 	}
 
 	public List<ReviewDTO> getReviews() {
